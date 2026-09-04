@@ -46,6 +46,11 @@ h1, .brand {
     padding: 1.25rem 1.5rem;
 }
 
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+}
+
 .brand {
     font-size: 1.3rem;
     font-weight: 700;
