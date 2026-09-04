@@ -31,6 +31,10 @@ h1, .brand {
     padding: 0 1.5rem;
 }
 
+.title {
+    font-size: 180%;
+}
+
 .site-header {
     border-bottom: 1px solid var(--line);
 }
@@ -40,6 +44,11 @@ h1, .brand {
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 1.5rem;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
 }
 
 .brand {
@@ -61,16 +70,34 @@ h1, .brand {
 }
 
 .hero {
-    padding: 4.5rem 0 5rem;
+    padding: 4.5rem 0 0 0;
 }
 
-.hero-grid {
+.projects {
+    padding: 4.5rem 0 0 0;
+}
+
+.hero-grid{
     display: grid;
     grid-template-columns: 1.3fr 1fr;
     grid-template-areas:
         "identity photo"
         "details  photo";
     gap: 1.5rem 3rem;
+}
+
+.projects-grid {
+    display: flex;
+    grid-template-columns: 1.3fr 1fr;
+    grid-template-areas:
+        "identity photo"
+        "details  photo";
+    gap: 1.5rem 3rem;
+    margin-top: 1rem;
+}
+
+.project-list {
+    display: block;
 }
 
 .hero-identity {
@@ -112,11 +139,12 @@ h1, .brand {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-muted);
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.2rem;
 }
 
-.meta-row dd {
-    font-weight: 600;
+
+.meta-row {
+    display: grid;
 }
 
 .social-links {
@@ -124,6 +152,21 @@ h1, .brand {
     gap: 0.5rem;
     flex-wrap: wrap;
 }
+
+.platform-link {
+    color: var(--paper);
+    background-color: var(--ink);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.platform-link:hover{
+    background-color: var(--accent);
+}
+
 
 .social-link {
     display: inline-block;
@@ -137,7 +180,8 @@ h1, .brand {
     transition: background-color 0.2s ease;
 }
 
-.social-link:hover {
+
+.social-link:hover{
     background-color: var(--accent);
 }
 
@@ -169,8 +213,22 @@ h1, .brand {
     border: 3px solid var(--ink);
 }
 
+.url-icon {
+    width: 100%;    
+    max-width: 4rem;
+    max-height: 2rem;
+}
+
+.mobile-icon {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 50%;
+}
+
 .site-footer {
     padding: 1.5rem;
+    margin-top: 1.5rem;
     color: var(--text-muted);
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
@@ -185,11 +243,23 @@ h1, .brand {
             "details";
     }
 
+    .projects-grid {
+        display: block;
+    }
+
     .hero-photo {
         max-width: 220px;
     }
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    .desktop-icon {
+        display: none;
+    }
+
+    .mobile-icon {
+        display: block;
     }
 }
