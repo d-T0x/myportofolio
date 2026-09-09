@@ -5,12 +5,12 @@
 }
 
 :root {
-    --ink: #1c1917;
-    --paper: #faf6f0;
-    --accent: #d95d39;
-    --accent-dark: #a8442a;
-    --line: #e3d9c9;
-    --text-muted: #6b6459;
+    --ink: #E0E2DB; 
+    --paper: #191716;
+    --accent: #E6AF2E;
+    --accent-dark: #E6AF2E;
+    --line: #696865;
+    --text-muted: #696865;
     --radius: 4px;
 }
 
@@ -49,6 +49,10 @@ h1, .brand {
 .nav-bar {
     display: flex;
     justify-content: space-between;
+}
+
+.nav-opt:hover {
+    color: var(--accent);
 }
 
 .brand {
@@ -270,13 +274,18 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
+.container h1{
+    color: var(--accent);
+}
+
 .section-kicker {
-    color: var(--accent-dark);
+    color: var(--ink);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
+
 
 .experience-section h1 {
     margin: 0.4rem 0 1.5rem;
@@ -296,8 +305,12 @@ h1, .brand {
     border-radius: var(--radius);
 }
 
+.experience-card h2{
+    color: var(--paper);
+}
+
 .experience-category {
-    color: var(--accent-dark);
+    color: var(--accent);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -317,4 +330,5 @@ h1, .brand {
     margin-top: 1rem;
     font-size: 0.85rem;
     font-weight: 600;
+    color: var(--line);
 }
