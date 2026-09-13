@@ -22,3 +22,10 @@ def show_experience(request):
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
+
+
+def show_project(request):
+    context = {
+        # Fill in
+    }
+    return render(request, "project.html", context)
