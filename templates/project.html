@@ -36,40 +36,37 @@
 
                 <div class="project-grid">
                     {% for project in project_list %}
-                        <article class="project-card">
-                            <span class="project-category">
-                                {{ project.get_category_display }}
-                            </span>
-
-                            {% if project.exist_thumbnail %}
-                                <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}">
-                            {% endif %}
-
-                            <h2>{{ project.title }}</h2>
-                            <p class="project-description">
-                                {{ project.description }}
-                            </p>
-
-                            <dl class="meta-list">
-                                <div class="meta-row">
-                                    <dt>Created</dt>
-                                    <dd>{{ project.created_at }}</dd>
-                                </div>
-                                <div class="meta-row">
-                                    <dt>Programs</dt>
-                                    <dd>{{ project.programs }}</dd>
-                                </div>
-                                <div class="meta-row">
-                                    <dt>Platforms</dt>
-                                    <dd>
-                                    {% load static %}
-                                        <a href="{{ project.link }}" class="platform-link" target="_blank">
-                                            <img class="url-icon desktop-icon" src="static/img/itchio-logo-black.png" alt="Itch.io icon">
-                                            <img class="url-icon mobile-icon" src="static/img/itchio-logo-textless-black.png" alt="Itch.io icon">
-                                        </a>
-                                    </dd>
-                                </div>
-                            </dl>
+                        <article class="project-card" style="background-image: url('{{ project.thumbnail.url }}');">
+                            <div class="project-content">
+                                <span class="project-category">
+                                    {{ project.get_category_display }}
+                                </span>
+                                <h2>{{ project.title }}</h2>
+                                <p class="project-description">
+                                    {{ project.description }}
+                                </p>
+    
+                                <dl class="meta-list">
+                                    <div class="meta-row">
+                                        <dt>Created</dt>
+                                        <dd>{{ project.created_at }}</dd>
+                                    </div>
+                                    <div class="meta-row">
+                                        <dt>Programs</dt>
+                                        <dd>{{ project.programs }}</dd>
+                                    </div>
+                                    <div class="meta-row">
+                                        <dt>Platforms</dt>
+                                        <dd>
+                                        {% load static %}
+                                            <a href="{{ project.link }}" class="platform-link" target="_blank">
+                                                <img class="url-icon desktop-icon" src="{% static '/img/itchio-logo-black.png' %}" alt="Itch.io icon">
+                                                <img class="url-icon mobile-icon" src="{% static '/img/itchio-logo-textless-black.png' %}"" alt="Itch.io icon">
+                                            </a>
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </div>
                         </article>
                     {% empty %}
                         <p class="empty-state">

@@ -23,6 +23,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='project',
             name='thumbnail',
-            field=models.ImageField(blank=True, default="PajangItch.png", upload_to=''),
+            field=models.ImageField(blank=True, default="PlaceholderThumbnail.png", upload_to=''),
         ),
     ]
