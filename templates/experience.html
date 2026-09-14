@@ -13,16 +13,16 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+            <a href="{% url 'main:show_main' %}" class="brand">HDA</a>
             <nav class="nav-bar">
                 <nav>
-                    <a href="{% url 'main:show_main' %}">Profile</a>
+                    <a href="{% url 'main:show_main' %}" class="nav-opt">Profile</a>
                 </nav>
                 <nav>
-                    <a href="{% url 'main:show_experience' %}">Experience</a>
+                    <a href="{% url 'main:show_experience' %}" class="nav-opt">Experience</a>
                 </nav>
                 <nav>
-                    <a href="#projects">Projects</a>
+                    <a href="{% url 'main:show_project' %}" class="nav-opt">Project</a>
                 </nav>
             </nav>
         </div>
@@ -31,7 +31,7 @@
     <main>
         <section class="experience-section" id="experience">
             <div class="container">
-                <p class="section-kicker">Perjalanan saya sejauh ini</p>
+                <p class="section-kicker">What I have gathered</p>
                 <h1>Experience</h1>
 
                 <div class="experience-grid">
@@ -46,14 +46,14 @@
                             </p>
 
                             {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
+                                <p class="experience-status">On Going</p>
                             {% else %}
-                                <p class="experience-status">Selesai</p>
+                                <p class="experience-status">Finished</p>
                             {% endif %}
                         </article>
                     {% empty %}
                         <p class="empty-state">
-                            Belum ada pengalaman yang ditambahkan.
+                            Under Construction!
                         </p>
                     {% endfor %}
                 </div>
