@@ -278,7 +278,7 @@ h1, h2, .brand {
 
 .experience-card {
     padding: 1.25rem;
-    background-color: var(--ink);
+    background-color: whitesmoke;
     border: 1px solid var(--line);
     border-radius: var(--radius);
 }
