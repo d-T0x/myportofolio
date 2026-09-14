@@ -21,8 +21,9 @@ body {
     line-height: 1.6;
 }
 
-h1, .brand {
-    font-family: "Italiana", -apple-system, sans-serif;
+h1, h2, .brand {
+    font-family: "Garamond", -apple-system, sans-serif;
+    font-weight: bold;
 }
 
 .container {
@@ -53,7 +54,8 @@ h1, .brand {
 
 .nav-opt {
     color: #E0E2DB;
-    font-weight: normal;
+    font-family: "Garamond", -apple-system, sans-serif;
+    font-weight: bold;
     transition: color 0.2s ease-in;
 }
 
@@ -124,7 +126,7 @@ h1, .brand {
     font-size: 0.85rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-dark);
+    color: var(--ink);
     font-weight: 700;
     margin-bottom: 0.75rem;
 }
@@ -157,6 +159,7 @@ h1, .brand {
 .social-links {
     display: flex;
     gap: 0.5rem;
+    margin: 1rem 0 0.5rem 0;
     flex-wrap: wrap;
 }
 

@@ -8,8 +8,8 @@ def show_main(request):
         "npm": "2506597220",
         "study_program": "Computer Science Undergrad",
         "bio": (
-            "CS student at Universitas Indonesia for, a while now." 
-            "Loves to read, study, and create stuff (also plays a variety of games)." 
+            "CS student at Universitas Indonesia for, a while now. " 
+            "Loves to read, study, and create stuff (also plays a variety of games). " 
             "Well, welcome to this website, I guess..  "
         ),
     }
