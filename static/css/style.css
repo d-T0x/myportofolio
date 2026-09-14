@@ -51,8 +51,16 @@ h1, .brand {
     justify-content: space-between;
 }
 
+.nav-opt {
+    color: #E0E2DB;
+    font-weight: normal;
+    transition: color 0.2s ease-in;
+}
+
 .nav-opt:hover {
     color: var(--accent);
+    font-weight: bold;
+    transition: color 0.2s ease-in;
 }
 
 .brand {
