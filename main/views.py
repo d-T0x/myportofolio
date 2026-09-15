@@ -39,7 +39,7 @@ def show_project(request):
     title_query = request.GET.get("title", "").strip()
 
     context = {
-        "name": "Burhan",
+        "name": "Hafizuddin Dzaki Azzam",
         "project_list": projects,
         "title_query": title_query,
     }
