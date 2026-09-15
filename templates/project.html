@@ -5,8 +5,23 @@
         <section class="project-section" id="project">
             <div class="container">
                 <p class="section-kicker">What I have made</p>
-                <h1>Project</h1>
-
+                <h1 class="title">Project</h1>
+                <form method="get"
+                      action="{% url 'main:show_project' %}"
+                      class="project-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Search based on project's name"
+                           class="project-search__input"
+                           aria-label="Search based on project's name">
+                    <button type="submit" class="button">Search</button>
+                    <a href="{% url 'main:create_project' %}"
+                        class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Add
+                    </a>
+                </form>
                 <div class="project-grid">
                     {% for project in project_list %}
                         <article class="project-card" style="background-image: url('{{ project.thumbnail.url }}');">
@@ -39,6 +54,7 @@
                                         </dd>
                                     </div>
                                 </dl>
+                                {% include "components/project_delete_modal.html" with project=project %}
                             </div>
                         </article>
                     {% empty %}
