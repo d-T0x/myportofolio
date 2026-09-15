@@ -261,15 +261,8 @@ h1, h2, .brand {
 .experience-grid,
 .project-grid {
     display: grid;
-    --grid-layout-gap: 10px;
-    --grid-column-count: 2;
-    --grid-item--min-width: 100px;
-
-    --gap-count: calc(var(--grid-column-count) - 1);
-    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
-    --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
-    grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
-    grid-gap: var(--grid-layout-gap);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
 }
 
 
@@ -385,6 +378,7 @@ h1, h2, .brand {
         display: block;
     }
 }
+
 
 /* Tambahan tutorial 03 */
 .project-form {
