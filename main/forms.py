@@ -1,6 +1,15 @@
-#from django.forms import ModelForm, TextInput, Textarea, URLInput
-from django.forms import *
-from main.models import Project
+from django.forms import (
+    ModelForm, 
+    TextInput, 
+    Textarea, 
+    Select, 
+    URLInput,
+    DateInput,
+)
+from main.models import (
+    Project,
+    Experience,
+)
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -50,6 +59,59 @@ class ProjectForm(ModelForm):
             "link": URLInput(
                 attrs={
                     "placeholder": "https://github.com/kakBurhan/burhanquestv4",
+                }
+            ),
+        }
+
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+        fields = [
+            "title",
+            "description",
+            "category",
+            "skills",
+            "started_at",
+            "ended_at",
+        ]
+
+        labels = {
+            "title": "Position/Title/Name",
+            "description": "Experience Description",
+            "category": "Experience Type",
+            "skills": "Skills",
+            "started_at": "Starting Date",
+            "ended_at": "End Date",
+        }
+
+        widgets = {
+            "title": TextInput(
+                attrs={
+                    "placeholder": "Lead of XXX",
+                    "maxlength": 255,
+                }
+            ),
+            "description": Textarea(
+                attrs={
+                    "placeholder": "What did you do?",
+                    "rows": 3,
+                }
+            ),
+            "skills": Textarea(
+                attrs={
+                    "placeholder": "Creative thinking, team work, etc.",
+                    "rows": 3,
+                }
+            ),
+            "started_at": DateInput(
+                attrs={
+                    "placeholder": "29 February 2020",
+                }
+            ),
+            "ended_at": DateInput(
+                attrs={
+                    "placeholder": "1 March 2020",
                 }
             ),
         }
