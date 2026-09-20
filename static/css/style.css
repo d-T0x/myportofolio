@@ -336,12 +336,20 @@ h1, h2, .brand {
     display: flex;
 }
 
+.experience-button {
+    display: flex;
+    gap: 0.45rem;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+}
+
 .experience-add-button {
     display: flex !important;
     margin: 0.4rem 0 1.5rem;
     align-items: center;
     gap: 0.45rem;
 }
+
 
 .project-thumbnail {
     display: flex;

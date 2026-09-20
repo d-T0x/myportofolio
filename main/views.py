@@ -3,7 +3,11 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from main.models import *
-from main.forms import ProjectForm, ExperienceForm
+from main.forms import (
+    ProjectForm, 
+    ExperienceForm, 
+    ExperienceUpdateForm,
+)    
 
 
 def show_main(request):
@@ -86,6 +90,25 @@ def create_experience(request):
     return render(request, "experience_form.html", context)
 
 
+def update_experience(request, experience_id):
+    query_set = get_object_or_404(Experience, pk=experience_id)
+    form = ExperienceUpdateForm(instance=query_set)
+
+    if request.method == "POST":
+        form = ExperienceUpdateForm(request.POST or None, instance=query_set)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Experience succesfully updated!")
+            return redirect("main:show_experience")
+
+    context = {
+            "name": "Hafizuddin Dzaki Azzam",
+            "form": form,
+            "experience": query_set,
+        }
+    return render(request, "experience_update_form.html", context)
+
+
 def delete_project(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
@@ -106,7 +129,6 @@ def delete_experience(request, experience_id):
         return redirect("main:show_experience")
 
     return redirect("main:show_experience")
-
 
 
 def get_projects_json(request):

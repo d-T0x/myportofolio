@@ -127,3 +127,68 @@ class ExperienceForm(ModelForm):
                 valid = False
 
         return valid
+
+
+class ExperienceUpdateForm(ModelForm):
+    class Meta:
+            model = Experience
+            fields = [
+                "title",
+                "description",
+                "category",
+                "skills",
+                "started_at",
+                "ended_at",
+            ]
+
+            labels = {
+                "title": "Position/Title/Name",
+                "description": "Experience Description",
+                "category": "Experience Type",
+                "skills": "Skills",
+                "started_at": "Starting Date",
+                "ended_at": "End Date",
+            }
+
+            widgets = {
+                "title": TextInput(
+                    attrs={
+                        "placeholder": "Lead of XXX",
+                        "maxlength": 255,
+                    }
+                ),
+                "description": Textarea(
+                    attrs={
+                        "placeholder": "What did you do?",
+                        "rows": 3,
+                    }
+                ),
+                "skills": Textarea(
+                    attrs={
+                        "placeholder": "Creative thinking, team work, etc.",
+                        "rows": 3,
+                    }
+                ),
+                "started_at": DateInput(
+                    attrs={
+                        "placeholder": "27 February 2020",
+                    }
+                ),
+                "ended_at": DateInput(
+                    attrs={
+                        "placeholder": "1 March 2020. Leave empty if ongoing",
+                    }
+                ),
+            }
+
+    def is_valid(self):
+        valid = super().is_valid()
+
+        if hasattr(self, 'cleaned_data') and valid:
+            start_date = self.cleaned_data.get('started_at')
+            end_date = self.cleaned_data.get('ended_at')
+            if end_date and start_date and end_date < start_date:
+                self.add_error('ended_at', 'End date must be greater than start date')
+                valid = False
+
+        return valid

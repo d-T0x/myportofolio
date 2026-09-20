@@ -25,11 +25,18 @@
                             </p>
 
                             {% if experience.is_ongoing %}
-                                <p class="experience-status">{{ experience.started_at }} - present</p>
+                                <p class="experience-status">{{ experience.started_at }} - Present</p>
                             {% else %}
                                 <p class="experience-status">{{ experience.started_at }} - {{ experience.ended_at }}</p>
                             {% endif %}
-                            {% include "components/experience_delete_modal.html" with experience=experience %}
+                            
+                            <div class="experience-button">
+                                {% include "components/experience_delete_modal.html" with experience=experience %}
+                                <a href="{% url 'main:update_experience' experience.id %}"
+                                    class="button experience-update-button">
+                                    Update
+                                </a>
+                            </div>
                         </article>
                     {% empty %}
                         <p class="empty-state">
