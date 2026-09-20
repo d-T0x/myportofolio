@@ -29,6 +29,7 @@
                             {% else %}
                                 <p class="experience-status">{{ experience.started_at }} - {{ experience.ended_at }}</p>
                             {% endif %}
+                            {% include "components/experience_delete_modal.html" with experience=experience %}
                         </article>
                     {% empty %}
                         <p class="empty-state">
