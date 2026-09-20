@@ -242,6 +242,7 @@ h1, h2, .brand {
 
 .container h1{
     color: var(--accent);
+    width: 100%;
 }
 
 .section-kicker {
@@ -331,6 +332,17 @@ h1, h2, .brand {
     color: var(--line);
 }
 
+.experience-header {
+    display: flex;
+}
+
+.experience-add-button {
+    display: flex !important;
+    margin: 0.4rem 0 1.5rem;
+    align-items: center;
+    gap: 0.45rem;
+}
+
 .project-thumbnail {
     display: flex;
     object-fit:cover;
@@ -340,6 +352,7 @@ h1, h2, .brand {
     aspect-ratio: 16 / 9;
     max-width: 95%;
 }
+
 
 /* Tambahan tutorial 03 */
 .project-form {

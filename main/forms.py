@@ -106,12 +106,24 @@ class ExperienceForm(ModelForm):
             ),
             "started_at": DateInput(
                 attrs={
-                    "placeholder": "29 February 2020",
+                    "placeholder": "27 February 2020",
                 }
             ),
             "ended_at": DateInput(
                 attrs={
-                    "placeholder": "1 March 2020",
+                    "placeholder": "1 March 2020. Leave empty if ongoing",
                 }
             ),
         }
+
+    def is_valid(self):
+        valid = super().is_valid()
+
+        if hasattr(self, 'cleaned_data') and valid:
+            start_date = self.cleaned_data.get('started_at')
+            end_date = self.cleaned_data.get('ended_at')
+            if end_date and start_date and end_date < start_date:
+                self.add_error('ended_at', 'End date must be greater than start date')
+                valid = False
+
+        return valid

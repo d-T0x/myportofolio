@@ -5,8 +5,14 @@
         <section class="experience-section" id="experience">
             <div class="container">
                 <p class="section-kicker">What I have gathered</p>
-                <h1>Experience</h1>
-
+                <div class="experience-header">
+                    <h1>Experience</h1>
+                    <a href="{% url 'main:create_experience' %}"
+                            class="button experience-add-button">
+                            <span aria-hidden="true">+</span>
+                            Add
+                    </a>
+                </div>
                 <div class="experience-grid">
                     {% for experience in experience_list %}
                         <article class="experience-card">
@@ -19,9 +25,9 @@
                             </p>
 
                             {% if experience.is_ongoing %}
-                                <p class="experience-status">On Going</p>
+                                <p class="experience-status">{{ experience.started_at }} - present</p>
                             {% else %}
-                                <p class="experience-status">Finished</p>
+                                <p class="experience-status">{{ experience.started_at }} - {{ experience.ended_at }}</p>
                             {% endif %}
                         </article>
                     {% empty %}
