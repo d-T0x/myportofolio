@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,20 +12,7 @@ from main.forms import (
     ExperienceForm, 
     ExperienceUpdateForm,
 )    
-
-
-def show_main(request):
-    context = {
-        "name": "Hafizuddin Dzaki Azzam",
-        "npm": "2506597220",
-        "study_program": "Computer Science Undergrad",
-        "bio": (
-            "CS student at Universitas Indonesia for, a while now. " 
-            "Loves to read, study, and create stuff (also plays a variety of games). " 
-            "Well, welcome to this website, I guess..  "
-        ),
-    }
-    return render(request, "index.html", context)
+import datetime
 
 
 def show_experience(request):
@@ -63,11 +52,14 @@ def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)
 
     if request.method == "POST" and form.is_valid():
-        login(request, form.get_user())
-        return redirect("main:show_main")
+        user = form.get_user()
+        login(request, user)
+        response = redirect("main:show_main")
+        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return response
 
     context = {
-        "name": "Hafizuddin Dzaki Azzam",
+        "name": "Burhan",
         "form": form,
     }
     return render(request, "login.html", context)
@@ -75,8 +67,25 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect("main:show_main")
+    response = redirect("main:show_main")
+    response.delete_cookie('last_login')
+    return response
 
+
+def show_main(request):
+    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
+    context = {
+        "name": "Hafizuddin Dzaki Azzam",
+        "npm": "2506597220",
+        "study_program": "Computer Science Undergrad",
+        "bio": (
+            "CS student at Universitas Indonesia for, a while now. " 
+            "Loves to read, study, and create stuff (also plays a variety of games). " 
+            "Well, welcome to this website, I guess..  "
+        ),
+        "last_login": last_login,
+    }
+    return render(request, "index.html", context)
 
 
 def show_project(request):
@@ -97,7 +106,11 @@ def show_project(request):
     return render(request, "project.html", context)
 
 
+@login_required(login_url="/login/")
 def create_project(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     form = ProjectForm(request.POST, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -112,7 +125,11 @@ def create_project(request):
     return render(request, "projects_form.html", context)
 
 
+@login_required(login_url="/login/")
 def create_experience(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = ExperienceForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -127,7 +144,11 @@ def create_experience(request):
     return render(request, "experience_form.html", context)
 
 
+@login_required(login_url="/login/")
 def update_experience(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     query_set = get_object_or_404(Experience, pk=experience_id)
     form = ExperienceUpdateForm(instance=query_set)
 
@@ -146,7 +167,11 @@ def update_experience(request, experience_id):
     return render(request, "experience_update_form.html", context)
 
 
+@login_required(login_url="/login/")
 def delete_project(request, project_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":
@@ -157,7 +182,11 @@ def delete_project(request, project_id):
     return redirect("main:show_project")
 
 
+@login_required(login_url="/login/")
 def delete_experience(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":

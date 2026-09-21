@@ -141,6 +141,9 @@ h1, h2, .brand {
     margin-bottom: 0.2rem;
 }
 
+.meta-row dd {
+    font-size: 0.9rem;
+}
 
 .meta-row {
     display: grid;
