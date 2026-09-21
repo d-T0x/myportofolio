@@ -141,6 +141,9 @@ h1, h2, .brand {
     margin-bottom: 0.2rem;
 }
 
+.meta-row dd {
+    font-size: 0.9rem;
+}
 
 .meta-row {
     display: grid;
@@ -560,6 +563,35 @@ h1, h2, .brand {
 .button-danger {
     background: #b42318;
 }
+
+
+/* Tambahan tutorial 04 */
+.star-form {
+    display: flex;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.button-star.is-starred {
+    background: var(--accent);
+    color: var(--ink);
+}
+
+.star-count {
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.8rem;
+}
+
 
 @media (max-width: 600px) {
     .hero-grid {

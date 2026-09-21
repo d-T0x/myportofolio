@@ -16,11 +16,13 @@
                            class="project-search__input"
                            aria-label="Search based on project's name">
                     <button type="submit" class="button">Search</button>
+                    {% if user.is_superuser %}
                     <a href="{% url 'main:create_project' %}"
                         class="button project-add-button">
                         <span aria-hidden="true">+</span>
                         Add
                     </a>
+                    {% endif %}
                 </form>
                 <div class="project-grid">
                     {% for project in project_list %}
@@ -54,7 +56,10 @@
                                         </dd>
                                     </div>
                                 </dl>
+                                {% if user.is_superuser %}
                                 {% include "components/project_delete_modal.html" with project=project %}
+                                {% endif %}
+                                {% include "components/project_star.html" with project=project %}
                             </div>
                         </article>
                     {% empty %}
