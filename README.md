@@ -115,6 +115,28 @@ These are the resources that I used:
 9. https://www.geeksforgeeks.org/python/csrf-token-in-django/
 <br><br>
 
+
+## **Assignment 4 - Deadline: Monday, 28 Sep 2026**
+> ### Features
+1. Upvote system for Experience.
+2. Experience sorting based on upvote count.
+3. Editor user class (read and update authorization).
+4. Dynamic button view based on user class.
+
+> ### AI Use
+1. #### Tools
+    1. None
+2. #### Prompt Strategy
+    1. Managed to not use any AI. Only used public internet resources, trials, and errors :)
+3. #### Prompting Log
+    1. None
+
+> ### Learning Sources
+These are the resources that I used:
+1. https://stackoverflow.com/questions/39485067/django-add-user-to-group-via-django-admin
+2. https://stackoverflow.com/questions/9469590/check-permission-inside-a-template-in-django
+<br><br>
+
 ### **Creator Profile**
 <hr>
 Name : Hafizuddin Dzaki Azzam
