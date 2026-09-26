@@ -21,6 +21,9 @@ class Experience(models.Model):
     skills = models.TextField(blank=True, null=True)
     started_at = models.DateField()
     ended_at = models.DateField(blank=True, null=True)
+    upvoted_by = models.ManyToManyField(
+        User, related_name="upvoted_experiences", blank=True
+    )
     def __str__(self):
         return self.title
     
@@ -46,7 +49,7 @@ class Project(models.Model):
     programs = models.TextField()
     link = models.URLField()
     starred_by = models.ManyToManyField(
-            User, related_name="starred_projects", blank=True
+        User, related_name="starred_projects", blank=True
     )
     def __str__(self):
         return self.title

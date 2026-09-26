@@ -56,10 +56,13 @@
                                         </dd>
                                     </div>
                                 </dl>
-                                {% if user.is_superuser %}
-                                {% include "components/project_delete_modal.html" with project=project %}
-                                {% endif %}
-                                {% include "components/project_star.html" with project=project %}
+
+                                <div class="project-button">
+                                    {% if user.is_superuser %}
+                                    {% include "components/project_delete_modal.html" with project=project %}
+                                    {% endif %}
+                                    {% include "components/project_star.html" with project=project %}
+                                </div>
                             </div>
                         </article>
                     {% empty %}

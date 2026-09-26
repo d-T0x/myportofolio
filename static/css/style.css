@@ -339,6 +339,7 @@ h1, h2, .brand {
     display: flex;
 }
 
+.project-button,
 .experience-button {
     display: flex;
     gap: 0.45rem;
@@ -565,11 +566,10 @@ h1, h2, .brand {
 }
 
 
-/* Tambahan tutorial 04 */
-.star-form {
+/* Tambahan tutorial & tugas 04 */
+.star-form,
+.upvote-form {
     display: flex;
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
 }
 
 .button-star {
