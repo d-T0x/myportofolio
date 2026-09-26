@@ -265,7 +265,7 @@ h1, h2, .brand {
 .experience-grid,
 .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
     gap: 1rem;
 }
 
@@ -345,6 +345,7 @@ h1, h2, .brand {
     gap: 0.45rem;
     margin-top: 1rem;
     margin-bottom: 0.3rem;
+    font-size: 0.75rem;
 }
 
 .experience-add-button {
@@ -410,7 +411,7 @@ h1, h2, .brand {
 
 .button {
     display: inline-block;
-    height: fit-content;
+    height: 100%;
     border: 0;
     border-radius: var(--radius);
     padding: 0.65rem 1rem;
@@ -570,6 +571,7 @@ h1, h2, .brand {
 .star-form,
 .upvote-form {
     display: flex;
+    height: fit-content;
 }
 
 .button-star {
@@ -609,7 +611,8 @@ h1, h2, .brand {
         opacity: 1;
     }
 
-    .projects-grid {
+    .experience-grid,
+    .project-grid {
         display: block;
     }
 
