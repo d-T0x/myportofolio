@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'main:toggle_upvote' experience.id %}" class="upvote-form">
+    {% csrf_token %}
+    <button type="submit"
+            class="button button-star{% if user in experience.upvoted_by.all %} is-starred{% endif %}"
+            title="{% if experience.upvoted_by.all %}Upvoted by {{ experience.upvoted_by.all|join:', ' }}{% else %}Be the first to upvote!{% endif %}">
+        <span aria-hidden="true">⮝</span>
+        {% if user in experience.upvoted_by.all %}Unvote{% else %}Upvote{% endif %}
+        <span class="star-count">{{ experience.upvoted_by.count }}</span>
+    </button>
+</form>

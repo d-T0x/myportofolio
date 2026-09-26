@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User, AbstractUser, Group 
 from django.db import models
 
 
@@ -21,8 +21,14 @@ class Experience(models.Model):
     skills = models.TextField(blank=True, null=True)
     started_at = models.DateField()
     ended_at = models.DateField(blank=True, null=True)
+    upvoted_by = models.ManyToManyField(
+        User, related_name="upvoted_experiences", blank=True
+    )
     def __str__(self):
         return self.title
+
+    def __lt__(self, other):
+        return self.upvoted_by.count() > other.upvoted_by.count()
     
     @property
     def is_ongoing(self):
@@ -46,7 +52,7 @@ class Project(models.Model):
     programs = models.TextField()
     link = models.URLField()
     starred_by = models.ManyToManyField(
-            User, related_name="starred_projects", blank=True
+        User, related_name="starred_projects", blank=True
     )
     def __str__(self):
         return self.title
@@ -54,3 +60,4 @@ class Project(models.Model):
     @property
     def exist_thumbnail(self):
         return self.thumbnail
+

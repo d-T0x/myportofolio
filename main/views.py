@@ -15,22 +15,7 @@ from main.forms import (
 import datetime
 
 
-def show_experience(request):
-    json_response = get_experiences_json(request)
-    
-    experiences = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    experiences = [experience.object for experience in experiences]
-    title_query = request.GET.get("title", "").strip()
 
-    context = {
-        "name": "Hafizuddin Dzaki Azzam",
-        "experience_list": experiences,
-        "title_query": title_query,
-    }
-    return render(request, "experience.html", context)
 
 
 def register(request):
@@ -86,6 +71,24 @@ def show_main(request):
         "last_login": last_login,
     }
     return render(request, "index.html", context)
+
+
+def show_experience(request):
+    json_response = get_experiences_json(request)
+    
+    experiences = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    experiences = [experience.object for experience in experiences]
+    title_query = request.GET.get("title", "").strip()
+
+    context = {
+        "name": "Hafizuddin Dzaki Azzam",
+        "experience_list": experiences,
+        "title_query": title_query,
+    }
+    return render(request, "experience.html", context)
 
 
 def show_project(request):
@@ -204,18 +207,18 @@ def get_projects_json(request):
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    projects_json = serializers.serialize("json", projects,use_natural_foreign_keys=True)
+    projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
     return HttpResponse(projects_json, content_type="application/json")
 
 
 def get_experiences_json(request):
     title_query = request.GET.get("title", "").strip()
-    experiences = Experience.objects.all()
+    experiences = sorted(Experience.objects.all())
 
     if title_query:
         experiences = experiences.filter(title__icontains=title_query)
 
-    experiences_json = serializers.serialize("json", experiences)
+    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
     return HttpResponse(experiences_json, content_type="application/json")
 
 
@@ -232,3 +235,16 @@ def toggle_star(request, project_id):
             project.starred_by.add(request.user)
 
     return redirect("main:show_project")
+
+
+@login_required(login_url="/login/")
+def toggle_upvote(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        if request.user in experience.upvoted_by.all():
+            experience.upvoted_by.remove(request.user)
+        else:
+            experience.upvoted_by.add(request.user)
+
+    return redirect("main:show_experience")
