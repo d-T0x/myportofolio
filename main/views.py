@@ -213,7 +213,7 @@ def get_projects_json(request):
 
 def get_experiences_json(request):
     title_query = request.GET.get("title", "").strip()
-    experiences = Experience.objects.all()
+    experiences = sorted(Experience.objects.all())
 
     if title_query:
         experiences = experiences.filter(title__icontains=title_query)

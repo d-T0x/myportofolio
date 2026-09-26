@@ -26,6 +26,9 @@ class Experience(models.Model):
     )
     def __str__(self):
         return self.title
+
+    def __lt__(self, other):
+        return self.upvoted_by.count() > other.upvoted_by.count()
     
     @property
     def is_ongoing(self):
