@@ -15,22 +15,7 @@ from main.forms import (
 import datetime
 
 
-def show_experience(request):
-    json_response = get_experiences_json(request)
-    
-    experiences = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    experiences = [experience.object for experience in experiences]
-    title_query = request.GET.get("title", "").strip()
 
-    context = {
-        "name": "Hafizuddin Dzaki Azzam",
-        "experience_list": experiences,
-        "title_query": title_query,
-    }
-    return render(request, "experience.html", context)
 
 
 def register(request):
@@ -86,6 +71,24 @@ def show_main(request):
         "last_login": last_login,
     }
     return render(request, "index.html", context)
+
+
+def show_experience(request):
+    json_response = get_experiences_json(request)
+    
+    experiences = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    experiences = [experience.object for experience in experiences]
+    title_query = request.GET.get("title", "").strip()
+
+    context = {
+        "name": "Hafizuddin Dzaki Azzam",
+        "experience_list": experiences,
+        "title_query": title_query,
+    }
+    return render(request, "experience.html", context)
 
 
 def show_project(request):

@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User, AbstractUser, Group 
 from django.db import models
 
 
@@ -54,3 +54,4 @@ class Project(models.Model):
     @property
     def exist_thumbnail(self):
         return self.thumbnail
+

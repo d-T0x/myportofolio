@@ -32,15 +32,17 @@
                                 <p class="experience-status">{{ experience.started_at }} - {{ experience.ended_at }}</p>
                             {% endif %}
                             
-                            {% if user.is_superuser %}
                             <div class="experience-button">
+                                {% if user.is_superuser %}
                                 {% include "components/experience_delete_modal.html" with experience=experience %}
+                                {% endif %}
+                                {% if perms.main.change_project %}
                                 <a href="{% url 'main:update_experience' experience.id %}"
                                     class="button experience-update-button">
                                     Update
                                 </a>
+                                {% endif %}
                             </div>
-                            {% endif %}
                         </article>
                     {% empty %}
                         <p class="empty-state">
