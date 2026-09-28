@@ -6,10 +6,9 @@
             <div class="container">
                 <p class="section-kicker">What I have made</p>
                 <h1 class="title">Project</h1>
-                <form method="get"
-                      action="{% url 'main:show_project' %}"
-                      class="project-search">
+                <form id="project-search-form" class="project-search">
                     <input type="search"
+                           id="search-input"
                            name="title"
                            value="{{ title_query }}"
                            placeholder="Search based on project's name"
@@ -24,54 +23,250 @@
                     </a>
                     {% endif %}
                 </form>
-                <div class="project-grid">
-                    {% for project in project_list %}
-                        <article class="project-card" style="background-image: url('{{ project.thumbnail.url }}');">
-                            <div class="project-content">
-                                <span class="project-category">
-                                    {{ project.get_category_display }}
-                                </span>
-                                <h2>{{ project.title }}</h2>
-                                <p class="project-description">
-                                    {{ project.description }}
-                                </p>
-    
-                                <dl class="meta-list">
-                                    <div class="meta-row">
-                                        <dt>Created</dt>
-                                        <dd>{{ project.created_at }}</dd>
-                                    </div>
-                                    <div class="meta-row">
-                                        <dt>Programs</dt>
-                                        <dd>{{ project.programs }}</dd>
-                                    </div>
-                                    <div class="meta-row">
-                                        <dt>Platforms</dt>
-                                        <dd>
-                                        {% load static %}
-                                            <a href="{{ project.link }}" class="platform-link" target="_blank">
-                                                <img class="url-icon desktop-icon" src="{% static '/img/itchio-logo-black.png' %}" alt="Itch.io icon">
-                                                <img class="url-icon mobile-icon" src="{% static '/img/itchio-logo-textless-black.png' %}"" alt="Itch.io icon">
-                                            </a>
-                                        </dd>
-                                    </div>
-                                </dl>
-
-                                <div class="project-button">
-                                    {% if user.is_superuser %}
-                                    {% include "components/project_delete_modal.html" with project=project %}
-                                    {% endif %}
-                                    {% include "components/project_star.html" with project=project %}
-                                </div>
-                            </div>
-                        </article>
-                    {% empty %}
-                        <p class="empty-state">
-                            Under Construction!
-                        </p>
-                    {% endfor %}
+                
+                <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Loading projects...</p>
                 </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Failed to load projects. Please try again.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>Under Construction!</p>
+                </div>
+                
+                <!-- Project Grid -->
+                <div id="grid" class="experience-grid project-grid hide"></div>
+                
             </div>
         </section>
     </main>
+
+    
+    <script>
+    // Konfigurasi
+    const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    let projectsAbortController;
+
+    // Elemen DOM
+    const loadingState = document.getElementById('loading');
+    const errorState = document.getElementById('error');
+    const emptyState = document.getElementById('empty');
+    const gridContainer = document.getElementById('grid');
+    const searchForm = document.getElementById('project-search-form');
+    const searchInput = document.getElementById('search-input');
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let searchDebounceTimer;
+
+    // Menyembunyikan/Menampilkan section halaman
+    function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    // Membuat elemen card project
+    function buildProjectCardElement(item) {
+        const project = item.fields;
+        const projectId = item.pk;
+
+        const articleElement = document.createElement('article');
+        articleElement.className = 'experience-card';
+
+        const imageHtml = project.thumbnail 
+            ? `<img src="${project.thumbnail}" alt="Gambar ${project.title}" class="project-image">`
+            : '';
+
+        const urlHtml = project.link 
+            ? `<a href="${project.link}" class="button" target="_blank">Visit</a>`
+            : '';
+
+        // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
+        const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
+            .replace('00000000-0000-0000-0000-000000000000', projectId);
+        const starUrl = "{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}"
+            .replace('00000000-0000-0000-0000-000000000000', projectId);
+
+        const deleteHtml = IS_SUPERUSER 
+            ? `<form method="post" action="${deleteUrl}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="button button-danger" onclick="return confirm('Do you want to delete this project?');">Delete</button>
+            </form>`
+            : '';
+
+        const isStarredClass = project.is_starred ? " is-starred" : "";
+        const starText = project.is_starred ? "Unstar" : "Star";
+        const starTitle = project.star_count > 0 
+            ? `Starred by ${project.starred_by_names}` 
+            : "Be the first to give a star!";
+
+        // Komponen card
+        const completeCardHtml = `
+            <article class="project-card">
+                <span class="project-category"> ${project.category} </span>
+                <h2>${project.title}</h2>
+                <p class="experience-description">${project.description}</p>
+                <div class="project-card-actions">
+                    <dl class="meta-list">
+                        <div class="meta-row">
+                            <dt>Created</dt>
+                            <dd>${project.created_at}</dd>
+                        </div>
+                        <div class="meta-row">
+                            <dt>Programs</dt>
+                            <dd>${project.programs}</dd>
+                        </div>
+                        
+                    </dl>
+                    
+                    <div class="project-actions">
+                        ${urlHtml}
+                        
+                        <form method="post" action="${starUrl}" class="star-form">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="button button-star${isStarredClass}"
+                                    title="${starTitle}">
+                                <span aria-hidden="true">★</span>
+                                ${starText}
+                                <span class="star-count">${project.star_count}</span>
+                            </button>
+                        </form>
+    
+                        ${deleteHtml}
+                    </div>
+                </div>
+            </article>
+        `;
+
+        articleElement.innerHTML = completeCardHtml;
+        return articleElement;
+    }
+
+    // Fetch data project
+    async function fetchProjects(searchQuery = "") {
+        if (projectsAbortController) projectsAbortController.abort();
+        projectsAbortController = new AbortController();
+
+        try {
+            displayPageSection({ showLoading: true });
+            
+            const url = searchQuery ? `${BASE_PROJECTS_ENDPOINT}?title=${encodeURIComponent(searchQuery)}` : BASE_PROJECTS_ENDPOINT;
+            
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' },
+                signal: projectsAbortController.signal,
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+
+            const projectData = await response.json();
+
+            if (projectData.length === 0) {
+                displayPageSection({ showEmpty: true });
+            } else {
+                gridContainer.innerHTML = '';
+                projectData.forEach(item => {
+                    gridContainer.appendChild(buildProjectCardElement(item));
+                });
+                displayPageSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return;
+            console.error('Error loading projects:', error);
+            displayPageSection({ showError: true });
+        }
+    }
+
+    // Event Handlers untuk Form Search
+    function searchProjects() {
+        fetchProjects(searchInput.value.trim());
+    }
+
+    searchInput.addEventListener("input", function() {
+        clearTimeout(searchDebounceTimer);
+
+        searchDebounceTimer = setTimeout(function() {
+            searchProjects();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        searchProjects();
+    });
+
+    // Start application
+    fetchProjects(searchInput.value.trim());
+    </script>
+    
 {% endblock content %}
+
+
+
+<!-- Archive -->
+
+<!-- <div id="grid" class="project-grid hide">
+    {% for project in project_list %}
+        <article class="project-card" style="background-image: url('{{ project.thumbnail.url }}');">
+            <div class="project-content">
+                <span class="project-category">
+                    {{ project.get_category_display }}
+                </span>
+                <h2>{{ project.title }}</h2>
+                <p class="project-description">
+                    {{ project.description }}
+                </p>
+    
+                <dl class="meta-list">
+                    <div class="meta-row">
+                        <dt>Created</dt>
+                        <dd>{{ project.created_at }}</dd>
+                    </div>
+                    <div class="meta-row">
+                        <dt>Programs</dt>
+                        <dd>{{ project.programs }}</dd>
+                    </div>
+                    <div class="meta-row">
+                        <dt>Platforms</dt>
+                        <dd>
+                        {% load static %}
+                            <a href="{{ project.link }}" class="platform-link" target="_blank">
+                                <img class="url-icon desktop-icon" src="{% static '/img/itchio-logo-black.png' %}" alt="Itch.io icon">
+                                <img class="url-icon mobile-icon" src="{% static '/img/itchio-logo-textless-black.png' %}"" alt="Itch.io icon">
+                            </a>
+                        </dd>
+                    </div>
+                    <div class="meta-row">
+                        <dt>Platforms</dt>
+                        <dd>
+                        {% load static %}
+                            <a href="{{ project.link }}" class="platform-link" target="_blank">
+                                <img class="url-icon desktop-icon" src="{% static '/img/itchio-logo-black.png' %}" alt="Itch.io icon">
+                                <img class="url-icon mobile-icon" src="{% static '/img/itchio-logo-textless-black.png' %}"" alt="Itch.io icon">
+                            </a>
+                        </dd>
+                    </div>
+                </dl>
+
+                <div class="project-button">
+                    {% if user.is_superuser %}
+                    {% include "components/project_delete_modal.html" with project=project %}
+                    {% endif %}
+                    {% include "components/project_star.html" with project=project %}
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <p class="empty-state">
+            Under Construction!
+        </p>
+    {% endfor %}
+</div> -->
