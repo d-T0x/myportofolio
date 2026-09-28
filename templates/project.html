@@ -16,11 +16,12 @@
                            aria-label="Search based on project's name">
                     <button type="submit" class="button">Search</button>
                     {% if user.is_superuser %}
-                    <a href="{% url 'main:create_project' %}"
-                        class="button project-add-button">
+                    <button type="button"
+                            class="button project-add-button"
+                            popovertarget="add-project-modal">
                         <span aria-hidden="true">+</span>
                         Add
-                    </a>
+                    </button>
                     {% endif %}
                 </form>
                 
@@ -44,6 +45,10 @@
                 
             </div>
         </section>
+
+        {% if user.is_superuser %}
+            {% include "components/project_form_modal.html" %}
+        {% endif %}
     </main>
 
     
@@ -71,6 +76,16 @@
         gridContainer.classList.toggle('hide', !showGrid);
     }
 
+    // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
     // Membuat elemen card project
     function buildProjectCardElement(item) {
         const project = item.fields;
@@ -79,13 +94,13 @@
         const articleElement = document.createElement('article');
         articleElement.className = 'experience-card';
 
-        const imageHtml = project.thumbnail 
-            ? `<img src="${project.thumbnail}" alt="Gambar ${project.title}" class="project-image">`
-            : '';
+        const imageHtml = project.thumbnail
+        ? `<img src="${escapeHtml(project.thumbnail)}" alt="Gambar ${escapeHtml(project.title)}" class="project-image">`
+        : '';
 
-        const urlHtml = project.link 
-            ? `<a href="${project.link}" class="button" target="_blank">Visit</a>`
-            : '';
+        const urlHtml = project.link
+        ? `<a href="${escapeHtml(project.link)}" class="button">Visit Project</a>`
+        : '';
 
         // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
         const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
@@ -103,24 +118,24 @@
         const isStarredClass = project.is_starred ? " is-starred" : "";
         const starText = project.is_starred ? "Unstar" : "Star";
         const starTitle = project.star_count > 0 
-            ? `Starred by ${project.starred_by_names}` 
+            ? `Starred by ${escapeHtml(project.starred_by_names)}` 
             : "Be the first to give a star!";
 
         // Komponen card
         const completeCardHtml = `
             <article class="project-card">
-                <span class="project-category"> ${project.category} </span>
-                <h2>${project.title}</h2>
-                <p class="experience-description">${project.description}</p>
+                <span class="project-category"> ${escapeHtml(project.category)} </span>
+                <h2>${escapeHtml(project.title)}</h2>
+                <p class="experience-description">${escapeHtml(project.description)}</p>
                 <div class="project-card-actions">
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>Created</dt>
-                            <dd>${project.created_at}</dd>
+                            <dd>${escapeHtml(project.created_at)}</dd>
                         </div>
                         <div class="meta-row">
                             <dt>Programs</dt>
-                            <dd>${project.programs}</dd>
+                            <dd>${escapeHtml(project.programs)}</dd>
                         </div>
                         
                     </dl>
@@ -184,6 +199,63 @@
         }
     }
 
+    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+    const projectForm = document.getElementById('project-form');
+
+    // Membaca nilai cookie, digunakan untuk mengambil token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Mengirim data form ke server
+    async function addProject(event) {
+        event.preventDefault();
+
+        const submitButton = projectForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        try {
+            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(projectForm),
+            });
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                projectForm.reset();
+                closeProjectModal();
+                showToast('Berhasil', 'A new project has been added!', 'success');
+                fetchProjects(searchInput.value.trim());
+            } else {
+                const errorMessages = result.errors
+                    ? Object.values(result.errors).flat().map(error => error.message)
+                    : [result.message || `An error has occured (status ${response.status}).`];
+                showToast('Failed to add project', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding project:', error);
+            showToast('Failed to add project', 'Unable to connect to server. Try again.', 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    if (projectForm) {
+        projectForm.addEventListener('submit', addProject);
+    }
+
     // Event Handlers untuk Form Search
     function searchProjects() {
         fetchProjects(searchInput.value.trim());
@@ -202,6 +274,10 @@
         clearTimeout(searchDebounceTimer);
         searchProjects();
     });
+
+    function closeProjectModal() {
+        document.getElementById("add-project-modal").hidePopover();
+    }
 
     // Start application
     fetchProjects(searchInput.value.trim());

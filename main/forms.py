@@ -11,6 +11,8 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple    
 from django.contrib.auth.models import Group
+from django.core.exceptions import ValidationError
+from django.utils.html import strip_tags
 
 
 from main.models import (
@@ -69,6 +71,21 @@ class ProjectForm(ModelForm):
                 }
             ),
         }
+
+    def clean_title(self):
+        title = strip_tags(self.cleaned_data["title"]).strip()
+        if not title:
+            raise ValidationError("Project name can't be only HTML tag.")
+        return title
+
+    def clean_description(self):
+        return strip_tags(self.cleaned_data["description"]).strip()
+    
+    def clean_category(self):
+        return strip_tags(self.cleaned_data["category"]).strip()
+
+    def clean_programs(self):
+        return strip_tags(self.cleaned_data["programs"]).strip()
 
 
 class ExperienceForm(ModelForm):
