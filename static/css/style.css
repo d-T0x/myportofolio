@@ -348,14 +348,6 @@ h1, h2, .brand {
     font-size: 0.75rem;
 }
 
-.experience-add-button {
-    display: flex !important;
-    margin: 0.4rem 0 1.5rem;
-    align-items: center;
-    gap: 0.45rem;
-}
-
-
 .project-thumbnail {
     display: flex;
     object-fit:cover;
@@ -428,6 +420,7 @@ h1, h2, .brand {
     color: #191716;
 }
 
+.experience-add-button,
 .project-add-button {
     display: flex;
     align-items: center;
@@ -452,13 +445,14 @@ h1, h2, .brand {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: #fff;
-    color: var(--ink);
+    color: var(--paper);
     font: inherit;
 }
 
 .project-search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
+    color: var(--paper);
 }
 
 .project-actions {
