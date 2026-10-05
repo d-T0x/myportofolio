@@ -271,8 +271,9 @@ h1, h2, .brand {
 
 
 .experience-card {
-    padding: 0.5rem;
+    padding: 1.25rem;
     background-color: whitesmoke;
+    border-radius: 4px;
 }
 
 .project-card {
