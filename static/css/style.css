@@ -271,10 +271,8 @@ h1, h2, .brand {
 
 
 .experience-card {
-    padding: 1.25rem;
+    padding: 0.5rem;
     background-color: whitesmoke;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
 }
 
 .project-card {
@@ -576,6 +574,7 @@ h1, h2, .brand {
     color: var(--paper);
 }
 
+.is-upvoted,
 .button-star.is-starred {
     background: var(--accent);
     color: var(--ink);
