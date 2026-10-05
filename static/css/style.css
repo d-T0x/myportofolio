@@ -601,9 +601,9 @@ h1, h2, .brand {
     align-items: center;
     gap: 1rem;
     transition: all 0.3s ease;
-    background-color: var(--paper);
+    background-color: var(--ink);
     border: 1px solid var(--line);
-    color: inherit;
+    color: var(--paper);
 }
 
 .toast-component:popover-open {
