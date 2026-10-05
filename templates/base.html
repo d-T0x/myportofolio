@@ -21,10 +21,10 @@
                     <a href="{% url 'main:show_project' %}" class="nav-opt">Projects</a>
                     {% if user.is_authenticated %}
                         <span class="nav-user">{{ user.username }}</span>
-                        <a href="{% url 'main:logout' %}">Logout</a>
+                        <a href="{% url 'main:logout' %}" class="nav-opt">Logout</a>
                     {% else %}
-                        <a href="{% url 'main:login' %}">Login</a>
-                        <a href="{% url 'main:register' %}">Register</a>
+                        <a href="{% url 'main:login' %}" class="nav-opt">Login</a>
+                        <a href="{% url 'main:register' %}" class="nav-opt">Register</a>
                     {% endif %}
                 </nav>
             </div>

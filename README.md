@@ -137,6 +137,39 @@ These are the resources that I used:
 2. https://stackoverflow.com/questions/9469590/check-permission-inside-a-template-in-django
 <br><br>
 
+
+## **Assignment 5 - Deadline: Monday, 05 Oct 2026**
+> ### Pertanyaan Reflektif Tugas 5
+1. *Debouncing* merujuk pada tindakan "membuang" beberapa operasi yang terjadi terlalu dekat antar satu sama lain dalam interval tertentu dan merubahnya menjadi satu operasi/pemanggilan. *Debouncing* penting untuk diterapkan dalam *search bar*. Jika tidak, setiap *input* yang masuk ke dalam *search bar* akan memanggil API dan berpotensi besar menyebabkan *lag*. Dengan *debouncing*, pemanggilan API terjadi setiap adanya "*pause*" *input* seusai lama durasi *debounce* yang telah diatur.<br><br>
+2. `await` memastikan suatu fungsi *asynchronous* menyelesaikan eksekusi suatu *promise* (*resolved/rejected*). Sebenarnya `await` merupakan bentuk modern dari `fetch.then()` dengan fitur kode *asynchronous* terlihat dan terasa *synchronous* serta *overall better code readability*. Pada kerangka dasarnya, `await` (atau `.then()`) krusial untuk digunakan saat *fetch* data dari API karena *promise* yang dibuat perlu dipastikan selesai terlebih dahulu agar data-data dapat "ditangkap" dengan benar dan selanjutnya diolah. <br><br>
+3. XSS (*Cross Site Scripting*) adalah eksploitasi dengan script yang dijalankan saat suatu korban (*client*) mengakses suatu website. Permasalahan utama dari XSS muncul apabila suatu *web* menganggap *input* dalam bentuk *script* sebagai *script* sungguhan sehingga dapat memicu eksekusi sebuah kode. Penggunaan AJAX/JavaScript rentan terhadap serangan ini menimbang prosedur pengolahan data yang menyisipkan kode HTML dalam bentuk string untuk ditampilkan. Apabila tidak ada validasi *input*, *input* *user* yang dioper ke AJAX/JavaScript dapat dianggap sebagai sebuah *script* HTML sungguhan dan akan dieksekusi sebagaimana isinya; tentunya bukan hal yang diinginkan oleh *developer*. Hal ini tidak seperti penggunaan template langsung dari Django karena template Django tidak melibatkan penyisipan string ke HTML, hanya pengambilan data dari *database model* sesuai apa yang telah disimpan. <br><br>    
+
+> ### Features
+1. Javascript based Experience data display
+2. Experience search bar with debouncing
+3. Experience add using AJAX
+4. Form submission toast
+5. XSS Protection 
+
+> ### AI Use
+1. #### Tools
+    1. GPT 6 Luna (VS Code chat session)
+2. #### Prompt Strategy
+    1. Used AI only when extremely stuck even after scrutinizing the code repeatedly.
+3. #### Prompting Log
+    1. Context: Experience data not displaying in any state (empty, error, etc)
+        - AI used:  GPT 6 Luna from VS Code chat session
+        1. Why isnt any state appearing in the page? is the javasciprt not working or what?
+
+> ### Learning Sources
+These are the resources that I used:
+1. Modul PBP 07 More On Web Development 
+2. https://medium.com/@walidelbourdiney25/understanding-promises-async-await-and-the-fetch-api-in-javascript-84b3ca37c3ee
+3. https://dev.to/paperbyte/async-await-vs-fetchthen-20oe
+4. https://www.cloudflare.com/en-au/learning/security/threats/cross-site-scripting/
+<br><br>
+
+
 ### **Creator Profile**
 <hr>
 Name : Hafizuddin Dzaki Azzam

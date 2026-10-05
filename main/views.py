@@ -75,19 +75,12 @@ def show_main(request):
 
 
 def show_experience(request):
-    json_response = get_experiences_json(request)
-    
-    experiences = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    experiences = [experience.object for experience in experiences]
     title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Hafizuddin Dzaki Azzam",
-        "experience_list": experiences,
         "title_query": title_query,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
@@ -229,13 +222,37 @@ def get_projects_json(request):
 
 def get_experiences_json(request):
     title_query = request.GET.get("title", "").strip()
-    experiences = sorted(Experience.objects.all())
+    experiences = Experience.objects.prefetch_related('upvoted_by').all()
 
     if title_query:
         experiences = experiences.filter(title__icontains=title_query)
 
-    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
-    return HttpResponse(experiences_json, content_type="application/json")
+    experiences = sorted(experiences)
+
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logika 
+    data = []
+    for experience in experiences:
+        upvoted_users = experience.upvoted_by.all()
+        is_upvoted = request.user in upvoted_users if request.user.is_authenticated else False
+        upvoted_by_names = ", ".join([u.username for u in upvoted_users])
+
+        data.append({
+            "pk": str(experience.id),
+            "fields": {
+                "title": experience.title,
+                "description": experience.description,
+                "category": experience.category,
+                "skills": experience.skills,
+                "started_at": experience.started_at,
+                "ended_at": experience.ended_at,
+                "is_ongoing": experience.is_ongoing,
+                "upvote_count": upvoted_users.count(),
+                "is_upvoted": is_upvoted,
+                "upvoted_by_names": upvoted_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
@@ -279,6 +296,25 @@ def create_project_ajax(request):
         project = form.save()
         return JsonResponse(
             {"message": "Project added successfully.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan experience."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Experience added successfully.", "pk": str(experience.id)},
             status=201,
         )
 

@@ -52,6 +52,7 @@ h1, h2, .brand {
     justify-content: space-between;
 }
 
+.nav-user,  
 .nav-opt {
     color: #E0E2DB;
     font-family: "Garamond", -apple-system, sans-serif;
@@ -63,6 +64,10 @@ h1, h2, .brand {
     color: var(--accent);
     font-weight: bold;
     transition: color 0.2s ease-in;
+}
+
+.nav-user {
+    color: var(--accent-dark);
 }
 
 .brand {
@@ -273,8 +278,7 @@ h1, h2, .brand {
 .experience-card {
     padding: 1.25rem;
     background-color: whitesmoke;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 4px;
 }
 
 .project-card {
@@ -348,14 +352,6 @@ h1, h2, .brand {
     font-size: 0.75rem;
 }
 
-.experience-add-button {
-    display: flex !important;
-    margin: 0.4rem 0 1.5rem;
-    align-items: center;
-    gap: 0.45rem;
-}
-
-
 .project-thumbnail {
     display: flex;
     object-fit:cover;
@@ -428,6 +424,7 @@ h1, h2, .brand {
     color: #191716;
 }
 
+.experience-add-button,
 .project-add-button {
     display: flex;
     align-items: center;
@@ -452,13 +449,14 @@ h1, h2, .brand {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: #fff;
-    color: var(--ink);
+    color: var(--paper);
     font: inherit;
 }
 
 .project-search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
+    color: var(--paper);
 }
 
 .project-actions {
@@ -582,6 +580,7 @@ h1, h2, .brand {
     color: var(--paper);
 }
 
+.is-upvoted,
 .button-star.is-starred {
     background: var(--accent);
     color: var(--ink);
@@ -607,9 +606,9 @@ h1, h2, .brand {
     align-items: center;
     gap: 1rem;
     transition: all 0.3s ease;
-    background-color: var(--paper);
+    background-color: var(--ink);
     border: 1px solid var(--line);
-    color: inherit;
+    color: var(--paper);
 }
 
 .toast-component:popover-open {
