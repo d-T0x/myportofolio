@@ -52,6 +52,7 @@ h1, h2, .brand {
     justify-content: space-between;
 }
 
+.nav-user,  
 .nav-opt {
     color: #E0E2DB;
     font-family: "Garamond", -apple-system, sans-serif;
@@ -63,6 +64,10 @@ h1, h2, .brand {
     color: var(--accent);
     font-weight: bold;
     transition: color 0.2s ease-in;
+}
+
+.nav-user {
+    color: var(--accent-dark);
 }
 
 .brand {
