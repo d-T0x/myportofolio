@@ -164,8 +164,9 @@ These are the resources that I used:
 > ### Learning Sources
 These are the resources that I used:
 1. Modul PBP 07 More On Web Development 
-2. https://medium.com/@walidelbourdiney25understanding-promises-async-await-and-the-fetch-api-in-javascript-84b3ca37c3ee
+2. https://medium.com/@walidelbourdiney25/understanding-promises-async-await-and-the-fetch-api-in-javascript-84b3ca37c3ee
 3. https://dev.to/paperbyte/async-await-vs-fetchthen-20oe
+4. https://www.cloudflare.com/en-au/learning/security/threats/cross-site-scripting/
 <br><br>
 
 
