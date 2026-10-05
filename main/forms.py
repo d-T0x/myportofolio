@@ -152,6 +152,18 @@ class ExperienceForm(ModelForm):
 
         return valid
 
+    def clean_title(self):
+            title = strip_tags(self.cleaned_data["title"]).strip()
+            if not title:
+                raise ValidationError("Experience name can't be only HTML tag.")
+            return title
+    
+    def clean_description(self):
+        return strip_tags(self.cleaned_data["description"]).strip()
+
+    def clean_category(self):
+        return strip_tags(self.cleaned_data["category"]).strip()
+
 
 class ExperienceUpdateForm(ModelForm):
     class Meta:

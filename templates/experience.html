@@ -18,11 +18,12 @@
                            aria-label="Search based on experience's name">
                     <button type="submit" class="button">Search</button>
                     {% if user.is_superuser %}
-                    <a href="{% url 'main:create_experience' %}"
-                            class="button experience-add-button">
-                            <span aria-hidden="true">+</span>
-                            Add
-                    </a>
+                    <button type="button"
+                            class="button experience-add-button"
+                            popovertarget="add-project-modal">
+                        <span aria-hidden="true">+</span>
+                        Add
+                    </button>
                     {% endif %}
                 </form>
 
@@ -45,13 +46,17 @@
                 <div id="grid" class="experience-grid project-grid hide"></div>
             </div>
         </section>
+
+        {% if user.is_superuser %}
+            {% include "components/experience_add_form_modal.html" %}
+        {% endif %}
     </main>
 
     <script>
     // Konfigurasi
     const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_experiences_json' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
-    const UPDATE_EXPERIENCE = "{{ perms.main.change_project|yesno:'true,false' }}" === "true";
+    const UPDATE_EXPERIENCE = "{{ perms.main.change_experience|yesno:'true,false' }}" === "true";
     let projectsAbortController;
 
     // Elemen DOM
@@ -123,34 +128,32 @@
 
         // Komponen card
         const completeCardHtml = `
-            <article class="experience-card">
-                <span class="experience-category">
-                    ${experience.category}
-                </span>
-                <h2>${experience.title}</h2>
-                <p class="experience-description">
-                    ${experience.description}
-                </p>
+            <span class="experience-category">
+                ${escapeHtml(experience.category)}
+            </span>
+            <h2>${escapeHtml(experience.title)}</h2>
+            <p class="experience-description">
+                ${escapeHtml(experience.description)}
+            </p>
+            
+            ${isOngoing}
+
+            <div class="experience-button">
+                ${updateHtml}
                 
-                ${isOngoing}
+                <form method="post" action="${upvoteUrl}" class="star-form">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="button button-star${isUpvotedClass}"
+                            title="${upvotedTitle}">
+                        <span aria-hidden="true">⮝</span>
+                        ${upvotedText}
+                        <span class="star-count">${escapeHtml(experience.upvote_count)}</span>
+                    </button>
+                </form>
 
-                <div class="experience-button">
-                    ${updateHtml}
-                    
-                    <form method="post" action="${upvoteUrl}" class="star-form">
-                        {% csrf_token %}
-                        <button type="submit" 
-                                class="button button-star${isUpvotedClass}"
-                                title="${upvotedTitle}">
-                            <span aria-hidden="true">⮝</span>
-                            ${upvotedText}
-                            <span class="star-count">${experience.upvote_count}</span>
-                        </button>
-                    </form>
-
-                    ${deleteHtml}
-                </div>
-            </article>
+                ${deleteHtml}
+            </div>
         `;
 
         articleElement.innerHTML = completeCardHtml;
@@ -192,7 +195,7 @@
         }
     }
 
-    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
+    const CREATE_EXPERIENCE_ENDPOINT = "{% url 'main:create_experience_ajax' %}";
     const experienceForm = document.getElementById('experience-form');
 
     // Membaca nilai cookie, digunakan untuk mengambil token CSRF
@@ -212,41 +215,41 @@
     }
 
     // Mengirim data form ke server
-    async function addProject(event) {
+    async function addExperience(event) {
         event.preventDefault();
 
-        const submitButton = projectForm.querySelector('button[type="submit"]');
+        const submitButton = experienceForm.querySelector('button[type="submit"]');
         submitButton.disabled = true;
 
         try {
-            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+            const response = await fetch(CREATE_EXPERIENCE_ENDPOINT, {
                 method: 'POST',
                 headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                body: new FormData(projectForm),
+                body: new FormData(experienceForm),
             });
             const result = await response.json().catch(() => ({}));
 
             if (response.ok) {
-                projectForm.reset();
+                experienceForm.reset();
                 closeProjectModal();
-                showToast('Berhasil', 'A new project has been added!', 'success');
-                fetchProjects(searchInput.value.trim());
+                showToast('Success', 'A new experience has been added!', 'success');
+                fetchExperiences(searchInput.value.trim());
             } else {
                 const errorMessages = result.errors
                     ? Object.values(result.errors).flat().map(error => error.message)
                     : [result.message || `An error has occured (status ${response.status}).`];
-                showToast('Failed to add project', errorMessages.join(' '), 'error');
+                showToast('Failed to add experience', errorMessages.join(' '), 'error');
             }
         } catch (error) {
-            console.error('Error adding project:', error);
-            showToast('Failed to add project', 'Unable to connect to server. Try again.', 'error');
+            console.error('Error adding experience:', error);
+            showToast('Failed to add experience', 'Unable to connect to server. Try again.', 'error');
         } finally {
             submitButton.disabled = false;
         }
     }
 
     if (experienceForm) {
-        experienceForm.addEventListener('submit', addProject);
+        experienceForm.addEventListener('submit', addExperience);
     }
 
     // Event Handlers untuk Form Search
