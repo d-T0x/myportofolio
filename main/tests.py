@@ -11,6 +11,7 @@ class MainTest(TestCase):
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
+            started_at="2024-10-20",
         )
         self.project = Project.objects.create(
             title="Project 1",
@@ -18,7 +19,7 @@ class MainTest(TestCase):
             category = "game",
             created_at = "2026-05-05",
             programs = "godot",
-            link = "testing",
+            link = "https://example.com/",
         )
 
     def test_main_url_is_accessible(self):
@@ -44,11 +45,15 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "experience.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Part-Time")
-        self.assertContains(response, "On Going")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+        data_response = self.client.get(reverse("main:get_experiences_json"))
+        self.assertEqual(data_response.status_code, 200)
+        experience = data_response.json()[0]["fields"]
+        self.assertEqual(experience["title"], self.experience.title)
+        self.assertEqual(experience["description"], self.experience.description)
+        self.assertEqual(experience["category"], self.experience.category)
+        self.assertTrue(experience["is_ongoing"])
 
     def test_empty_experience_page(self):
         Experience.objects.all().delete()
@@ -57,13 +62,14 @@ class MainTest(TestCase):
         self.assertContains(response, "Under Construction!")
 
     def test_completed_experience(self):
-        self.experience.ended_at = timezone.now()
+        self.experience.ended_at = timezone.localdate()
         self.experience.save()
-        response = self.client.get(reverse("main:show_experience"))
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Finished")
-        self.assertNotContains(response, "On Going")
+        response = self.client.get(reverse("main:get_experiences_json"))
+        experience = response.json()[0]["fields"]
+        self.assertEqual(experience["ended_at"], self.experience.ended_at.isoformat())
+        self.assertFalse(experience["is_ongoing"])
 
     def test_project_model(self):
             self.assertEqual(str(self.project), "Project 1")
@@ -75,11 +81,16 @@ class MainTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "project.html")
-        self.assertContains(response, self.project.title)
-        self.assertContains(response, self.project.description)
-        self.assertContains(response, "Game")
-        self.assertContains(response, "godot")
         self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+        data_response = self.client.get(reverse("api:project-list"))
+        self.assertEqual(data_response.status_code, 200)
+        project = data_response.json()[0]
+        self.assertEqual(project["title"], self.project.title)
+        self.assertEqual(project["description"], self.project.description)
+        self.assertEqual(project["category"], self.project.category)
+        self.assertEqual(project["programs"], self.project.programs)
+        self.assertEqual(project["link"], self.project.link)
 
     def test_empty_project_page(self):
         Project.objects.all().delete()

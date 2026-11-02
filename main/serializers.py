@@ -13,10 +13,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = [
             "id", "title", "description", "category",
-            "created_at", "programs", "starred_by",
+            "created_at", "programs", "link", "starred_by",
             "star_count", "is_starred", "starred_by_names",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "starred_by"]
 
     def validate_title(self, value):
         value = strip_tags(value).strip()
