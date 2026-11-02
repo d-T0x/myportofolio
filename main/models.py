@@ -47,7 +47,6 @@ class Project(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     category = models.CharField(max_length=20, choices=PROJECT_TYPE, default='misc')
-    thumbnail = models.ImageField(blank=True, default="PlaceholderThumbnail.png")
     created_at = models.DateField()
     programs = models.TextField()
     link = models.URLField()
