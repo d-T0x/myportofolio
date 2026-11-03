@@ -87,11 +87,16 @@ def show_experience(request):
 
 def show_project(request):
     title_query = request.GET.get("title", "").strip()
+    user = request.user
+    can_edit_projects = user.is_authenticated and (
+        user.is_superuser or user.groups.filter(name="Editor").exists()
+    )
 
     context = {
         "name": "Hafizuddin Dzaki Azzam",
         "title_query": title_query,
         "form": ProjectForm(),
+        "can_edit_projects": can_edit_projects,
     }
     return render(request, "project.html", context)
 

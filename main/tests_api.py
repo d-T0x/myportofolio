@@ -113,7 +113,17 @@ class ProjectAPITest(APITestCase):
         self.visitor.groups.add(Group.objects.create(name="Editor"))
         self.client.force_authenticate(user=self.visitor)
         response = self.client.patch(self.detail_url, {"title": "Changed"}, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.title, "Changed")
+        self.assertEqual(
+            self.client.post(self.list_url, self.payload, format="json").status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
+        self.assertEqual(
+            self.client.delete(self.detail_url).status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
 
     def test_wrong_method(self):
         self.client.force_authenticate(user=self.owner)
