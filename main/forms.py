@@ -127,13 +127,15 @@ class ExperienceForm(ModelForm):
                 }
             ),
             "started_at": DateInput(
+                format="%Y-%m-%d",
                 attrs={
-                    "placeholder": "27 February 2020",
+                    "type": "date",
                 }
             ),
             "ended_at": DateInput(
+                format="%Y-%m-%d",
                 attrs={
-                    "placeholder": "1 March 2020. Leave empty if ongoing",
+                    "type": "date",
                 }
             ),
         }
@@ -204,13 +206,15 @@ class ExperienceUpdateForm(ModelForm):
                     }
                 ),
                 "started_at": DateInput(
+                    format="%Y-%m-%d",
                     attrs={
-                        "placeholder": "27 February 2020",
+                        "type": "date",
                     }
                 ),
                 "ended_at": DateInput(
+                    format="%Y-%m-%d",
                     attrs={
-                        "placeholder": "1 March 2020. Leave empty if ongoing",
+                        "type": "date",
                     }
                 ),
             }

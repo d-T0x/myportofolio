@@ -76,11 +76,16 @@ def show_main(request):
 
 def show_experience(request):
     title_query = request.GET.get("title", "").strip()
+    user = request.user
+    can_edit_experience = user.is_authenticated and (
+        user.is_superuser or user.groups.filter(name="Editor").exists()
+    )
 
     context = {
         "name": "Hafizuddin Dzaki Azzam",
         "title_query": title_query,
         "form": ExperienceForm(),
+        "can_edit_experience": can_edit_experience,
     }
     return render(request, "experience.html", context)
 
