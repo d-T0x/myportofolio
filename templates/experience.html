@@ -166,7 +166,7 @@
     async function writeExperience(url, method, payload) {
         const response = await fetch(url, {
             method,
-            headers: {
+            headers: {  
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
