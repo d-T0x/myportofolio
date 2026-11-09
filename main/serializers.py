@@ -55,7 +55,7 @@ class ExperienceSerializer(serializers.ModelSerializer):
             "skills", "started_at", "ended_at", "is_ongoing",
             "upvote_count", "is_upvoted", "upvoted_by_names",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "is_ongoing"]
 
     def validate(self, data):
         valid = True
@@ -89,3 +89,6 @@ class ExperienceSerializer(serializers.ModelSerializer):
     
     def get_upvoted_by_names(self, obj):
         return ", ".join(user.username for user in obj.upvoted_by.all())
+
+    def get_is_ongoing(self, obj):
+        return obj.is_ongoing
