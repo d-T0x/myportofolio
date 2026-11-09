@@ -57,14 +57,20 @@ class ExperienceSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "is_ongoing"]
 
-    def validate(self, data):
-        valid = True
-        start_date = data['started_at']
-        end_date = data['ended_at']
+    def validate(self, attrs):
+        start_date = attrs.get(
+            "started_at",
+            self.instance.started_at if self.instance is not None else None,
+        )
+        end_date = attrs.get(
+            "ended_at",
+            self.instance.ended_at if self.instance is not None else None,
+        )
         if end_date and start_date and end_date < start_date:
-            serializers.ValidationError('End date must be greater than start date')
-            valid = False
-        return valid
+            raise serializers.ValidationError({
+                "ended_at": "End date must be on or after the start date.",
+            })
+        return attrs
 
     def validate_title(self, value):
         value = strip_tags(value).strip()

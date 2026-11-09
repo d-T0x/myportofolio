@@ -81,7 +81,7 @@ def project_star(request, project_id):
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def experience_list(request):
     if request.method in ("GET", "HEAD"):
-        experiences = Experience.objects.prefetch_related("upvoted_by").order_by("title", "id")
+        experiences = Experience.objects.prefetch_related("upvoted_by")
         title = request.query_params.get("title", "").strip()
         if title:
             experiences = experiences.filter(title__icontains=title)
@@ -131,5 +131,3 @@ def experience_upvote(request, experience_id):
         experience.upvoted_by.add(request.user)
     serializer = ExperienceSerializer(experience, context={"request": request})
     return Response(serializer.data)
-
-# Experience update?
