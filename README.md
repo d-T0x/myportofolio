@@ -169,6 +169,36 @@ These are the resources that I used:
 4. https://www.cloudflare.com/en-au/learning/security/threats/cross-site-scripting/
 <br><br>
 
+## **Assignment 6 - Deadline: Monday, 09 Nov 2026**
+> ### Pertanyaan Reflektif Tugas 6
+1. Meninjau dari kepanjagannya, REST merupakan *Representational State Transfer*, sebuah arsitektur untuk mengorganisasi web API supaya lebih "representatif". Melalui implementasi arsitektur REST, setiap request yang dikirim memiliki indikasi yang jelas untuk apa request tersebut dilihat dari jenis requestnya: `GET, POST, PUT, PATCH, DELETE`. Penggunaan JSON response saja tidak menjamin RESTful API, contoh yang jelas ada pada tutorial 5 lalu. Pada tutorial 5, JSON respsonse telah diterapkan, tapi arsitektur API belum RESTful karena setiap interaksi request tidak representatif: hanya menggunakan `GET` dan `POST`, mengandalkan string untuk memisah action dari setiap request. <br><br> Perbedaan `PUT` dan `PATCH` terletak pada scale modifikasi/perubahan yang ingin dilakukant terhadap suatu objek. Satu cara mudah untuk melihat perbedaannya ada pada perbandingan makna harfiah "PUT an item" dengan "PATCH a hole": `PUT` "menaruh" suatu objek secara keseluruhan, sedangkan `PATCH` me"nambal" sebagian dari suatu objek. Skenario yang baik untuk `PUT` adalah ketika hendak mengganti data keseluruhan objek, sedangkan untuk `PATCH` hanya ketika hendak mengubah sebagian data pada suatu objek, contohnya mengubah titel atau nama.
+<br><br>
+2. Serializer pada Django REST berperan sebagai "penerjemah" yang menghubungkan Python dengan format JSON / XML. Dengan peran serializer, alur komunikasi Python to JSON / XML dan JSON / XML to Python menjadi lebih terstruktur dan memiliki pengaturan geneirk  alih-alih menggunakan dictionary manual seperti yang digunakan pada tutorial 5.
+<br><br>
+3. Pada Django REST framework, autentikasi diperankan oleh `SessionAuthentication` sedangkan otoriasai diperankan oleh permission class. `SessionAuthentication` pada REST framework akan mengecek kebereadaan user pada session tersebut dan melakukan tes CSRF. Di lain sisi, untuk otoriasasi REST framework akan melihat pengolahan izin otorisasi pada file `permissions.py` yang menggunakan `BasePermission` REST framework.<br><br>
+Hak akses harus diperiksa dengan permission class di server supaya pengguna dengan tingkat tertentu benar-benar punya/tidak punya akses terhadap suatu fitur. Apabila hanya menyembunyikan UI, pengguna masih dapat mengirimkan request ke server melalui browser mereka untuk melakukan hal-hal yang seharusnya tidak bisa dilakukan.
+4. Sistem pengecekan tanpa CSRF SessionAuthentication hanya mengecek apakah terdapat user login pada session keberedaan `sessionid`. Dengan sistem tersebut, serangan CSRF menjadi rentan terjadi pada website, membuka peluang bagi pihak ketiga untuk melakukan request atas nama kita ke server, sehingga CSRF masih diperlukan untk memastikan bahwa request yang dikirim memang berasal dari frontend asli pengguna dan bukan dari pihak ketiga. <br><br> Penggunaan `force_authenticate` tidak cukup untuk membuktikan CSRF berjalan karena melihat dari bagaimana    `force_authenticate  itu berjalan. Function tersebut menjalankan autentikasi secara "paksa" yang menghasilkan status user terautentikasi tanpa menjalankan pengecekan backend    SessionAuthentication  : alhasil tidak ada pengecekan CSRF. Berbeda dengan alternatifnya, menggunakan    APIClient(enforce_csrf_checks=True)     berpasangan dengan `login()` mensimulasikan alur login nyata dari pengguna sehingga pengecekan backend seperti CSRF juga ikut berjalan.
+
+> ### Features
+1. Refactor architecture to be RESTful.
+
+> ### AI Use
+1. #### Tools
+    1. GPT 6 Luna (VS Code chat session)
+2. #### Prompt Strategy
+    1. Used AI only when extremely stuck even after scrutinizing the code repeatedly.
+3. #### Prompting Log
+    1. Context: Experience form data error on submission and start to end date validation problem
+        - AI used:  GPT 6 Luna from VS Code chat session
+        1. What makes my current experience form creation/update errors? also, how can I make the end date accept blank answer to get an ongoing status?
+
+> ### Learning Sources
+These are the resources that I used:
+1. https://www.django-rest-framework.org/api-guide/serializers/#field-level-validation
+2. Tanya teman: Deandra Sulthan Al Yudasswara
+<br><br>
+
+
 
 ### **Creator Profile**
 <hr>
